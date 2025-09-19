@@ -21,12 +21,10 @@
             <xpath expr="//page[@name='products']" position="after">
                 <!-- Create a new page/tab called "Vendors" -->
                 <page name="vendors_page" string="Vendors">
-                    <!-- 
-                        Display the Many2many field as tags for easy selection
-                        This field is defined in the models.py file as vendor_ids
-                    -->
-                    <field name="vendor_ids" widget="many2many_tags"/>
-                </page>
+    <group>
+            <field name="vendor_ids" widget="many2many_tags"/>
+    </group>
+</page>
             </xpath>
         </field>
     </record>
