@@ -22,7 +22,16 @@
                 <!-- Create a new page/tab called "Vendors" -->
                 <page name="vendors_page" string="Vendors">
     <group>
-            <field name="vendor_ids" widget="many2many_tags"/>
+        <field name="rfq_vendor_ids">
+            <list editable="bottom">
+                <field name="partner_id"/>
+            </list>
+            <form string="Vendor">
+                <group>
+                    <field name="partner_id"/>
+                </group>
+            </form>
+        </field>
     </group>
 </page>
             </xpath>
