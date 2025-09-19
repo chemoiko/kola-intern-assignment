@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- 
+        This view extends the standard purchase order form to add a new "Vendors" tab.
+        It allows users to assign multiple vendors to a single RFQ (Request for Quotation).
+    -->
+    <record id="purchase_order_form_inherited" model="ir.ui.view">
+        <!-- Human-readable name for this view -->
+        <field name="name">purchase_order_form_customized</field>
+        <!-- The model this view is for (purchase.order = RFQ) -->
+        <field name="model">purchase.order</field>
+        <!-- Inherit from the standard purchase order form view -->
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <!-- Define the UI structure -->
+        <field name="arch" type="xml">
+            <!-- 
+                XPath: Find the "products" page and add our new page after it
+                This ensures the Vendors tab appears after the Products tab
+            -->
+            <xpath expr="//page[@name='products']" position="after">
+                <!-- Create a new page/tab called "Vendors" -->
+                <page name="vendors_page" string="Vendors">
+                    <!-- 
+                        Display the Many2many field as tags for easy selection
+                        This field is defined in the models.py file as vendor_ids
+                    -->
+                    <field name="vendor_ids" widget="many2many_tags"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
