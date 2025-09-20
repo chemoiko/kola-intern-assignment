@@ -45,7 +45,8 @@
                                 <field name="vendor_id"/>
                                 <field name="price_total"/>
                                 <field name="currency_id"/>
-                                <field name="state"/>
+                                <button name="action_set_won" type="object" icon="fa-check" title="Accept" class="btn-link" invisible="state == 'won'"/>
+                                <button name="action_set_lost" type="object" icon="fa-times" title="Refuse" class="btn-link" invisible="state == 'lost'"/>
                             </list>
                             <form string="Bid">
                                 <group>
@@ -55,6 +56,10 @@
                                     <field name="state"/>
                                     <field name="note"/>
                                 </group>
+                                <footer>
+                                    <button string="Accept" type="object" name="action_set_won" class="btn-primary" invisible="state == 'won'"/>
+                                    <button string="Refuse" type="object" name="action_set_lost" class="btn-secondary" invisible="state == 'lost'"/>
+                                </footer>
                             </form>
                         </field>
                     </group>
