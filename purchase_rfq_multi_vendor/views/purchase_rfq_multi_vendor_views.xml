@@ -2,25 +2,16 @@
 <odoo>
 
     <!-- 
-        This view extends the standard purchase order form to add a new "Vendors" tab.
-        It allows users to assign multiple vendors to a single RFQ (Request for Quotation).
+        This view extends the standard purchase order form to add a new "Vendors" and "Bids" tabs.
     -->
     <record id="purchase_order_form_inherited" model="ir.ui.view">
-        <!-- Human-readable name for this view -->
         <field name="name">purchase_order_form_customized</field>
-        <!-- The model this view is for (purchase.order = RFQ) -->
         <field name="model">purchase.order</field>
-        <!-- Inherit from the standard purchase order form view -->
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
-        <!-- Define the UI structure -->
+        <field name="priority" eval="90"/>
         <field name="arch" type="xml">
-            <!-- 
-                XPath: Find the "products" page and add our new page after it
-                This ensures the Vendors tab appears after the Products tab
-            -->
-            <xpath expr="//page[@name='products']" position="after">
-                <!-- Create a new page/tab called "Vendors" -->
-                <page name="vendors_page" string="Vendors">
+    <xpath expr="//page[@name='products']" position="after">
+         <page name="vendors_page" string="Vendors">
     <group>
         <field name="rfq_vendor_ids">
             <list editable="bottom">
@@ -34,6 +25,40 @@
         </field>
     </group>
 </page>
+    </xpath>
+
+        </field>
+    </record>
+
+    <!-- Separate view record to insert Bids after Vendors -->
+    <record id="purchase_order_form_bids" model="ir.ui.view">
+        <field name="name">purchase.order.form.bids</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="priority" eval="95"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='vendors_page']" position="after">
+                <page name="bids_page" string="Bids" invisible="state not in ['sent','to approve','purchase','done']">
+                    <group>
+                        <field name="bid_ids" readonly="state not in ['sent','to approve','purchase','done']">
+                            <list editable="bottom">
+                                <field name="vendor_id"/>
+                                <field name="price_total"/>
+                                <field name="currency_id"/>
+                                <field name="state"/>
+                            </list>
+                            <form string="Bid">
+                                <group>
+                                    <field name="vendor_id"/>
+                                    <field name="price_total"/>
+                                    <field name="currency_id"/>
+                                    <field name="state"/>
+                                    <field name="note"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
