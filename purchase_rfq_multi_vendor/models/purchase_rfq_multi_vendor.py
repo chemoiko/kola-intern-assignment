@@ -29,9 +29,11 @@ class PurchaseOrder(models.Model):
 class PurchaseRfqVendor(models.Model):
     _name = 'purchase.rfq.vendor'
     _description = 'RFQ Vendor'
+    _order = 'sequence, id'
 
     rfq_id = fields.Many2one('purchase.order', string='RFQ', required=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, domain=[('supplier_rank', '>=', 0)])
+    sequence = fields.Integer(string='Sequence', default=10)
 
     _sql_constraints = [
         ('uniq_rfq_partner', 'unique(rfq_id, partner_id)', 'This vendor is already linked to this RFQ.')
@@ -69,12 +71,33 @@ class PurchaseRfqBid(models.Model):
             bid.rfq_id.partner_id = bid.vendor_id.id
 
     def action_set_won(self):
+        # Approve selected bid(s) and show toast notification
         for bid in self:
             if not bid.rfq_id:
                 continue
             if bid.state != 'won':
                 bid.with_context(skip_won_hook=True).write({'state': 'won'})
             bid._apply_won_side_effects()
+
+        # Show success toast using bus notification (no page reload needed)
+        if len(self) == 1:
+            bid = self[0]
+            vendor_name = bid.vendor_id.display_name or 'Vendor'
+            rfq_name = bid.rfq_id.name or 'RFQ'
+            message = f"{vendor_name} selected as winner for {rfq_name}."
+        else:
+            message = "Selected bid(s) approved as winner."
+
+        # Send notification via bus
+        self.env['bus.bus']._sendone(
+            self.env.user.partner_id,
+            'simple_notification',
+            {
+                'title': 'Bid Approved',
+                'message': message,
+                'type': 'success',
+            }
+        )
 
     def write(self, vals):
         res = super().write(vals)

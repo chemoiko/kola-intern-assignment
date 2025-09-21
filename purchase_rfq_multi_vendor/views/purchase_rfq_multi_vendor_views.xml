@@ -11,14 +11,16 @@
         <field name="priority" eval="90"/>
         <field name="arch" type="xml">
     <xpath expr="//page[@name='products']" position="after">
-         <page name="vendors_page" string="Vendors">
+         <page name="vendors_page" string="Vendors" invisible="state in ('purchase', 'done', 'cancel')">
     <group>
         <field name="rfq_vendor_ids">
             <list editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="partner_id"/>
             </list>
             <form string="Vendor">
                 <group>
+                    <field name="sequence" invisible="1"/>
                     <field name="partner_id"/>
                 </group>
             </form>
@@ -38,9 +40,9 @@
         <field name="priority" eval="95"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='vendors_page']" position="after">
-                <page name="bids_page" string="Bids" invisible="state not in ['sent','to approve','purchase','done']">
+                <page name="bids_page" string="Bids" invisible="state != 'sent'">
                     <group>
-                        <field name="bid_ids" readonly="state not in ['sent','to approve','purchase','done']">
+                        <field name="bid_ids" readonly="state != 'sent'">
                             <list editable="bottom">
                                 <field name="vendor_id"/>
                                 <field name="price_total"/>
