@@ -56,7 +56,7 @@ The admin receives, reviews approves the purchase request on his end, updating t
 ## 3. Procurement Creates RFQ
 
 The admin uses the interface to convert the approved purchase request into a Request for Quotation (RFQ). A new `RFQ`.
-![Create RFQ](https://i.imgur.com/RJEhXkF.png)
+![Create RFQ](https://i.imgur.com/pgCn6NW.png)
 
 
 ## 4. Multi-Vendor Assignment
@@ -69,14 +69,19 @@ The RFQ to vendors relationship operates through a one-to-many connection that a
 
 **Database Table**:
 
-+-------------------+           +-----------------------+
-|   purchase_order  |           |   purchase_rfq_vendor |
-|-------------------|           |-----------------------|
-| id (PK)           |<--+    +--| id (PK)               |
-| name              |   |    |  | rfq_id (FK)           |
-| ...               |   |    |  | partner_id (FK)       |
-+-------------------+   |    |  | sequence              |
-                        |    |  +-----------------------+
++-------------------+           +----------------------+
+|   purchase_order  |           |   purchase_rfq_bid   |
+|-------------------|           |----------------------|
+| id (PK)           |<--+    +--| id (PK)              |
+| name              |   |    |  | rfq_id (FK)          |
+| ...               |   |    |  | vendor_id (FK)       |
++-------------------+   |    |  | product_qty          |
+                        |    |  | price_total          |
+                        |    |  | currency_id (FK)     |
+                        |    |  | date_expected        |
+                        |    |  | note                 |
+                        |    |  | state                |
+                        |    |  +----------------------+
                         |    |
                         |    |  +----------------------+
                         |    +--| res_partner          |
