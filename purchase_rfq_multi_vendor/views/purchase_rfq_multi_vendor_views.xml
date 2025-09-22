@@ -45,16 +45,22 @@
                         <field name="bid_ids" readonly="state != 'sent'">
                             <list editable="bottom">
                                 <field name="vendor_id"/>
+                                <!-- <field name="product_qty"/> -->
                                 <field name="price_total"/>
                                 <field name="currency_id"/>
+                                <field name="date_expected" widget="date"/>
                                 <button name="action_set_won" type="object" icon="fa-check" title="Accept" class="btn-link" invisible="state == 'won'"/>
                                 <button name="action_set_lost" type="object" icon="fa-times" title="Refuse" class="btn-link" invisible="state == 'lost'"/>
+                                <field name="state" widget="badge" decoration-success="state == 'won'" decoration-danger="state == 'lost'"/>
                             </list>
                             <form string="Bid">
                                 <group>
                                     <field name="vendor_id"/>
+                                    <!-- <field name="product_qty"/> -->
                                     <field name="price_total"/>
                                     <field name="currency_id"/>
+                                    <field name="date_expected" widget="date"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'won'" decoration-danger="state == 'lost'"/>
                                     <field name="state"/>
                                     <field name="note"/>
                                 </group>

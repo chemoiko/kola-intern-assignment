@@ -11,10 +11,7 @@
         "wizard/purchase_request_line_make_purchase_order_view.xml",
         "views/purchase_request_view.xml",
         "views/purchase_request_line_view.xml",
-        # removed: product template and stock views not needed for your scope
-        # "views/product_template.xml",
-        # "views/purchase_order_view.xml",
-        # "views/stock_move_views.xml",
+       
     ],
     "license": "LGPL-3",
     "installable": True,

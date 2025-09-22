@@ -45,6 +45,9 @@ class PurchaseRfqBid(models.Model):
 
     rfq_id = fields.Many2one('purchase.order', string='RFQ', required=True, ondelete='cascade')
     vendor_id = fields.Many2one('res.partner', string='Vendor', required=True, domain=[('supplier_rank', '>=', 0)])
+    product_qty = fields.Float(string='Quantity', default=1.0)
+    price_unit = fields.Float(string="Unit Price")  # <-- add this
+    date_expected = fields.Date(string='Expected Arrival')
     price_total = fields.Monetary(string='Offer')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id)
     note = fields.Text()
@@ -53,6 +56,8 @@ class PurchaseRfqBid(models.Model):
     _sql_constraints = [
         ('uniq_rfq_vendor', 'unique(rfq_id, vendor_id)', 'This vendor already has a bid on this RFQ.')
     ]
+
+    # price_total is manually editable; no compute
 
     def _apply_won_side_effects(self):
         # Apply side-effects of a bid being marked as won without rewriting state again
