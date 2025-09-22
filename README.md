@@ -55,7 +55,7 @@ The admin receives, reviews approves the purchase request on his end, updating t
 
 ## 3. Procurement Creates RFQ
 
-The admin uses the interface to convert the approved purchase request into a Request for Quotation (RFQ). A new `purchase_order` record is created with state "draft".
+The admin uses the interface to convert the approved purchase request into a Request for Quotation (RFQ). A new `RFQ`.
 ![Create RFQ](https://i.imgur.com/RJEhXkF.png)
 
 
@@ -111,7 +111,7 @@ CREATE TABLE purchase_rfq_bid (
 
 The admin  selects the winning bid by clicking the Accept button. The system automatically updates the bid states, marks the selected vendor as "won" and others as "lost", and sets the RFQ's main vendor to the winning vendor.
 
-![Winner Selection](https://i.imgur.com/Ii0psNG.png)
+![Winner Selection](https://i.imgur.com/3QxUvGc.png)
 
 **Database Updates**:
 - `purchase_rfq_bid.state`: Winner set to "won", others to "lost"
