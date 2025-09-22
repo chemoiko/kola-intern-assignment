@@ -68,6 +68,23 @@ The admin assigns multiple vendors to the RFQ through the Vendors tab. Records a
 The RFQ to vendors relationship operates through a one-to-many connection that allows a single Request for Quotation to be assigned to multiple vendors simultaneously. This relationship is implemented using a junction table called purchase_rfq_vendor that acts as an intermediary between the main RFQ record and the vendor records. A vendor can also be assigned to multiple different RFQs over time, and each RFQ can have multiple vendors assigned to it.
 
 **Database Table**:
+
++-------------------+           +-----------------------+
+|   purchase_order  |           |   purchase_rfq_vendor |
+|-------------------|           |-----------------------|
+| id (PK)           |<--+    +--| id (PK)               |
+| name              |   |    |  | rfq_id (FK)           |
+| ...               |   |    |  | partner_id (FK)       |
++-------------------+   |    |  | sequence              |
+                        |    |  +-----------------------+
+                        |    |
+                        |    |  +----------------------+
+                        |    +--| res_partner          |
+                        |       |----------------------|
+                        +-------| id (PK)              |
+                                | name                 |
+                                | ...                  |
+                                +----------------------+
 - `purchase_rfq_vendor`: Links RFQ to multiple vendors with sequence ordering
 
 ```sql
@@ -80,7 +97,7 @@ The RFQ to vendors relationship operates through a one-to-many connection that a
 );
 ```
 
-## 5. Competitive Bidding Process
+## 5. Bidding Process
 
 After sending the emails to multiple vendors, the bids tab then becomes visible and the vendors bids are input via the Bids tab. Each bid creates a record in the `purchase_rfq_bid` table with pricing and delivery terms.
 The bidding process operates through a one-to-many relationship where a single RFQ can receive multiple bids from different vendors, creating a competitive procurement environment. This relationship is implemented using the purchase_rfq_bid table that acts as a junction between the RFQ and the vendor responses.
