@@ -48,19 +48,20 @@ CREATE TABLE purchase_request_line (
 
 ## 2. Manager Approval Process
 
-The department manager reviews and approves the purchase request, updating the `state` field to "approved" in the `purchase_request` table. This triggers notification to the procurement department or the individual set to be approved by.
+The admin receives, reviews approves the purchase request on his end, updating the `state` field to "approved" in the `purchase_request` table. 
 
 ![Manager Approval](https://i.imgur.com/crFMQBd.png)
+![Create RFQ](https://i.imgur.com/jL0Fkr2.png)
 
 ## 3. Procurement Creates RFQ
 
-The procurement specialist uses the interface to convert the approved purchase request into a Request for Quotation (RFQ). A new `purchase_order` record is created with state "draft".
+The admin uses the interface to convert the approved purchase request into a Request for Quotation (RFQ). A new `purchase_order` record is created with state "draft".
+![Create RFQ](https://i.imgur.com/RJEhXkF.png)
 
-![Create RFQ](https://i.imgur.com/jL0Fkr2.png)
 
 ## 4. Multi-Vendor Assignment
 
-The procurement specialist assigns multiple vendors to the RFQ through the Vendors tab. Records are created in the `purchase_rfq_vendor` table, establishing the one-to-many relationship between the RFQ and vendors.
+The admin assigns multiple vendors to the RFQ through the Vendors tab. Records are created in the `purchase_rfq_vendor` table, establishing the one-to-many relationship between the RFQ and vendors.
 
 ![Multi-Vendor Assignment](https://i.imgur.com/MOlfZu8.png)
 
@@ -81,9 +82,9 @@ CREATE TABLE purchase_rfq_vendor (
 
 ## 5. Competitive Bidding Process
 
-Vendors submit competitive bids through the Bids tab. Each bid creates a record in the `purchase_rfq_bid` table with pricing, delivery terms, and commercial details.
+Vendors submit competitive bids through the Bids tab. Each bid creates a record in the `purchase_rfq_bid` table with pricing, delivery terms.
 
-![Competitive Bidding](https://i.imgur.com/Ii0psNG.png)
+![Competitive Bidding](https://i.imgur.com/3QxUvGc.png)
 
 The bidding process operates through a one-to-many relationship where a single RFQ can receive multiple bids from different vendors, creating a competitive procurement environment. This relationship is implemented using the purchase_rfq_bid table that acts as a junction between the RFQ and the vendor responses.
 
@@ -108,7 +109,7 @@ CREATE TABLE purchase_rfq_bid (
 
 ## 6. Winner Selection
 
-The procurement specialist selects the winning bid by clicking the Accept button. The system automatically updates the bid states, marks the selected vendor as "won" and others as "lost", and sets the RFQ's `partner_id` to the winning vendor.
+The admin  selects the winning bid by clicking the Accept button. The system automatically updates the bid states, marks the selected vendor as "won" and others as "lost", and sets the RFQ's main vendor to the winning vendor.
 
 ![Winner Selection](https://i.imgur.com/Ii0psNG.png)
 
