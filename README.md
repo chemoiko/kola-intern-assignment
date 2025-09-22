@@ -12,7 +12,7 @@ An employee initiates a purchase request by specifying products, quantities, and
 
 ## 1. Employee Creates Purchase Request
 
-An employee creates a purchase request in the database, specifying product details, quantities, and estimated costs. The system creates records in the `purchase_request` and `purchase_request_line` tables, with the request initially in "draft" state. It is linked to the users and company tables.
+An employee creates a purchase request with the purchase request module in the database, specifying product details, quantities, and estimated costs. The system creates records in the `purchase_request` and `purchase_request_line` tables, with the request initially in "draft" state. It is linked to the users and company tables.
 
 ![Purchase Request Creation](https://i.imgur.com/r6KURgA.png)
 
@@ -24,7 +24,7 @@ An employee creates a purchase request in the database, specifying product detai
 
 ```sql
 -- Purchase Request Table
-CREATE TABLE purchase_request (
+ purchase_request (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,                    -- Request number (sequence)
   requested_by INT NOT NULL REFERENCES res_users(id),
@@ -35,7 +35,7 @@ CREATE TABLE purchase_request (
 );
 
 -- Purchase Request Lines Table
-CREATE TABLE purchase_request_line (
+ purchase_request_line (
   id SERIAL PRIMARY KEY,
   request_id INT NOT NULL REFERENCES purchase_request(id) ON DELETE CASCADE,
   product_id INT REFERENCES product_product(id),
@@ -71,7 +71,7 @@ The RFQ to vendors relationship operates through a one-to-many connection that a
 - `purchase_rfq_vendor`: Links RFQ to multiple vendors with sequence ordering
 
 ```sql
-CREATE TABLE purchase_rfq_vendor (
+ purchase_rfq_vendor (
   id SERIAL PRIMARY KEY,
   rfq_id INT NOT NULL REFERENCES purchase_order(id) ON DELETE CASCADE,
   partner_id INT NOT NULL REFERENCES res_partner(id),
@@ -82,15 +82,15 @@ CREATE TABLE purchase_rfq_vendor (
 
 ## 5. Competitive Bidding Process
 
-Vendors submit competitive bids through the Bids tab. Each bid creates a record in the `purchase_rfq_bid` table with pricing, delivery terms.
+After sending the emails to multiple vendors, the bids tab then becomes visible and the vendors bids are input via the Bids tab. Each bid creates a record in the `purchase_rfq_bid` table with pricing and delivery terms.
+The bidding process operates through a one-to-many relationship where a single RFQ can receive multiple bids from different vendors, creating a competitive procurement environment. This relationship is implemented using the purchase_rfq_bid table that acts as a junction between the RFQ and the vendor responses.
 
 ![Competitive Bidding](https://i.imgur.com/3QxUvGc.png)
 
-The bidding process operates through a one-to-many relationship where a single RFQ can receive multiple bids from different vendors, creating a competitive procurement environment. This relationship is implemented using the purchase_rfq_bid table that acts as a junction between the RFQ and the vendor responses.
 
 ```sql
 -- RFQ Bids Table
-CREATE TABLE purchase_rfq_bid (
+ purchase_rfq_bid (
   id SERIAL PRIMARY KEY,
   rfq_id INT NOT NULL REFERENCES purchase_order(id) ON DELETE CASCADE,
   vendor_id INT NOT NULL REFERENCES res_partner(id),
@@ -119,7 +119,7 @@ The admin  selects the winning bid by clicking the Accept button. The system aut
 
 ## 7. Purchase Order Confirmation
 
-The RFQ is confirmed, converting it to a Purchase Order with state "purchase". The Vendors and bids tab becomes hidden as only the winning vendor remains relevant.
+The RFQ is confirmed, converting it to a Purchase Order with state "purchase". The Vendors and bids tab becomes hidden as only the winning vendor remains relevant and the rest of the steps can be continued normally.
 
 ![Purchase Order Confirmation](https://i.imgur.com/pwNKwAC.png)
 
