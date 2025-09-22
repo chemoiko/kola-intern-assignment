@@ -68,7 +68,7 @@ The admin assigns multiple vendors to the RFQ through the Vendors tab. Records a
 The RFQ to vendors relationship operates through a one-to-many connection that allows a single Request for Quotation to be assigned to multiple vendors simultaneously. This relationship is implemented using a junction table called purchase_rfq_vendor that acts as an intermediary between the main RFQ record and the vendor records. A vendor can also be assigned to multiple different RFQs over time, and each RFQ can have multiple vendors assigned to it.
 
 **Database Table**:
-![Multi-Vendor Assignment](https://i.imgur.com/BnnnVUI.png)
+![Multi-Vendor schema](https://i.imgur.com/BnnnVUI.png)
 
 
 - `purchase_rfq_vendor`: Links RFQ to multiple vendors with sequence ordering
@@ -90,6 +90,7 @@ The bidding process operates through a one-to-many relationship where a single R
 
 ![Competitive Bidding](https://i.imgur.com/3QxUvGc.png)
 
+![bid Assignment](https://i.imgur.com/KDMqp4q.png)
 
 ```sql
 -- RFQ Bids Table
