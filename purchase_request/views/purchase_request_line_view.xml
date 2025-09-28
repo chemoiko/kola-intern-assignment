@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 
 <odoo>
     <record id="purchase_request_line_tree" model="ir.ui.view">

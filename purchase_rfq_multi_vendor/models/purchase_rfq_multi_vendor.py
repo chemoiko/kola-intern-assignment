@@ -5,11 +5,7 @@ from odoo import models, fields
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    rfq_vendor_ids = fields.One2many(
-        'purchase.rfq.vendor',
-        'rfq_id',
-        string='Vendors'
-    )
+    rfq_vendor_ids = fields.One2many( 'purchase.rfq.vendor', 'rfq_id',string='Vendors' )
     bid_ids = fields.One2many(
         'purchase.rfq.bid',
         'rfq_id',

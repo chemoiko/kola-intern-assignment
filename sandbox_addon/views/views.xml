@@ -1,0 +1,102 @@
+<odoo>
+  <record id = "view_estate_property_tree" model = "ir.ui.view">
+  <field name="name">estate.property.tree</field>
+  <field name= "model">estate.property</field>
+  <field name="arch" type="xml">
+    <list>
+        <field name="title"/>
+        <field name="postcode"/>
+        <field name="bedrooms"/>
+        <field name="living_area"/>
+        <field name="expected_price"/>
+        <field name="selling_price"/>
+        <field name="available_from"/>
+    </list>
+    </field>
+  </record>
+
+
+<record id="view_estate_property_form" model="ir.ui.view">
+  <field name="name">estate.property.form</field>
+  <field name="model">estate.property</field>
+  <field name="arch" type="xml">
+  <form>
+  <sheet>
+  <group>
+    <group>
+    <field name="postcode"/>
+    <field name="available_from"/>
+    </group>
+    <group>
+    <field name="expected_price"/>
+    <field name="selling_price"/>
+    </group>
+    </group>
+    <notebook>
+      <page string="Description">
+         <group>
+            <field name="description"/>
+            <field name="bedrooms"/>
+            <field name="living_area"/>
+            <field name="facades"/>
+            <field name="garage"/>
+            <field name="garden"/>
+            <field name="garden_area"/>
+            <field name="garden_orientation"/>
+
+        </group>
+      </page>
+        <page string="Offers">
+         <group>
+            <field name="description"/>
+            <field name="bedrooms"/>
+            <field name="living_area"/>
+            <field name="facades"/>
+            <field name="garage"/>
+            <field name="garden"/>
+            <field name="garden_area"/>
+            <field name="garden_orientation"/>
+
+        </group>
+      </page>
+    </notebook>
+    </sheet>
+
+  </form>
+  </field>
+</record>
+
+
+
+
+<record id="action_estate_property" model="ir.actions.act_window">
+  <field name="name">Estate Property</field>
+  <field name="res_model">estate.property</field>
+  <field name="view_mode">list,form</field>
+</record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<menuitem id="menu_sandbox_root" name="Sandbox"/>
+<menuitem id="menu_sandbox_properties" name="Properties"
+          parent="menu_sandbox_root" action="action_estate_property"/>
+</odoo>
+
+
