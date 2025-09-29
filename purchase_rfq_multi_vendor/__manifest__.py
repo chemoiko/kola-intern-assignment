@@ -5,7 +5,7 @@
     "author": "eli",
     "website": "",
     "license": "LGPL-3",
-    "depends": ["purchase"],
+    "depends": ["purchase", "base"],
     "data": [
         "security/ir.model.access.csv",
         "views/purchase_rfq_multi_vendor_views.xml",

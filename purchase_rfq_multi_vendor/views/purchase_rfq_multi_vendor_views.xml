@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
     <!-- 
@@ -14,7 +13,7 @@
                 <page name="vendors_page" string="Vendors"
                     invisible="state in ('purchase', 'done', 'cancel')">
                     <group>
-                        <field name="rfq_vendor_ids" string="Vendr">
+                        <field name="rfq_vendor_ids">
                             <list editable="bottom">
                                 <field name="sequence" widget="handle" />
                                 <field name="partner_id" />

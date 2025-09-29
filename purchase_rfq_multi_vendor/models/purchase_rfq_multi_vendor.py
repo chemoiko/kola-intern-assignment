@@ -5,7 +5,8 @@ from odoo import models, fields
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    rfq_vendor_ids = fields.One2many( 'purchase.rfq.vendor', 'rfq_id',string='Vendors' )
+    rfq_vendor_ids = fields.One2many(
+        'purchase.rfq.vendor', 'rfq_id', string='Vendors')
     bid_ids = fields.One2many(
         'purchase.rfq.bid',
         'rfq_id',
@@ -17,40 +18,51 @@ class PurchaseOrder(models.Model):
         for order in self:
             winner = order.partner_id
             if winner and order.rfq_vendor_ids:
-                others = order.rfq_vendor_ids.filtered(lambda v: v.partner_id.id != winner.id)
+                others = order.rfq_vendor_ids.filtered(
+                    lambda v: v.partner_id.id != winner.id)
                 if others:
                     others.unlink()
         return res
+
 
 class PurchaseRfqVendor(models.Model):
     _name = 'purchase.rfq.vendor'
     _description = 'RFQ Vendor'
     _order = 'sequence, id'
 
-    rfq_id = fields.Many2one('purchase.order', string='RFQ', required=True, ondelete='cascade')
-    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, domain=[('supplier_rank', '>=', 0)])
+    rfq_id = fields.Many2one(
+        'purchase.order', string='RFQ', required=True, ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, domain=[
+                                 ('supplier_rank', '>=', 0)])
     sequence = fields.Integer(string='Sequence', default=10)
 
     _sql_constraints = [
-        ('uniq_rfq_partner', 'unique(rfq_id, partner_id)', 'This vendor is already linked to this RFQ.')
+        ('uniq_rfq_partner', 'unique(rfq_id, partner_id)',
+         'This vendor is already linked to this RFQ.')
     ]
+
 
 class PurchaseRfqBid(models.Model):
     _name = 'purchase.rfq.bid'
     _description = 'RFQ Bid'
 
-    rfq_id = fields.Many2one('purchase.order', string='RFQ', required=True, ondelete='cascade')
-    vendor_id = fields.Many2one('res.partner', string='Vendor', required=True, domain=[('supplier_rank', '>=', 0)])
+    rfq_id = fields.Many2one(
+        'purchase.order', string='RFQ', required=True, ondelete='cascade')
+    vendor_id = fields.Many2one('res.partner', string='Vendor', required=True, domain=[
+                                ('supplier_rank', '>=', 0)])
     product_qty = fields.Float(string='Quantity', default=1.0)
+    price_total = fields.Monetary(string='Offer')
     price_unit = fields.Float(string="Unit Price")  # <-- add this
     date_expected = fields.Date(string='Expected Arrival')
-    price_total = fields.Monetary(string='Offer')
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency',
+                                  required=True, default=lambda self: self.env.company.currency_id)
     note = fields.Text()
-    state = fields.Selection([('draft','Draft'),('submitted','Submitted'),('won','Won'),('lost','Lost')], default='draft')
+    state = fields.Selection([('draft', 'Draft'), ('submitted', 'Submitted'),
+                             ('won', 'Won'), ('lost', 'Lost')], default='draft')
 
     _sql_constraints = [
-        ('uniq_rfq_vendor', 'unique(rfq_id, vendor_id)', 'This vendor already has a bid on this RFQ.')
+        ('uniq_rfq_vendor', 'unique(rfq_id, vendor_id)',
+         'This vendor already has a bid on this RFQ.')
     ]
 
     # price_total is manually editable; no compute
@@ -111,5 +123,3 @@ class PurchaseRfqBid(models.Model):
         for bid in self:
             if bid.state != 'lost':
                 bid.write({'state': 'lost'})
-
-
