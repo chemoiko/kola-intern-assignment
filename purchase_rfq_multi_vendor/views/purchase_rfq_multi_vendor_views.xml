@@ -9,13 +9,6 @@
         <field name="inherit_id" ref="purchase.purchase_order_form" />
         <field name="priority" eval="90" />
         <field name="arch" type="xml">
-            <!-- Add smart button for bids count in the header -->
-            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button class="oe_stat_button" icon="fa-list-alt">
-                    <field name="bid_count" widget="statinfo" string="Bids"/>
-                </button>
-            </xpath>
-            
             <xpath expr="//page[@name='products']" position="after">
                 <page name="vendors_page" string="Vendors"
                     invisible="state in ('purchase', 'done', 'cancel')">

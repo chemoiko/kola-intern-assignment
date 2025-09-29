@@ -1,5 +1,5 @@
 
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class PurchaseOrder(models.Model):
@@ -12,12 +12,6 @@ class PurchaseOrder(models.Model):
         'rfq_id',
         string='Bids'
     )
-    bid_count = fields.Integer(string='Bid Count', compute='_compute_bid_count')
-
-    @api.depends('bid_ids')
-    def _compute_bid_count(self):
-        for order in self:
-            order.bid_count = len(order.bid_ids)
 
     def button_confirm(self):
         res = super().button_confirm()
