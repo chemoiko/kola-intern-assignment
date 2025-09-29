@@ -1,13 +1,12 @@
 from odoo import http
 from odoo.http import request
 import base64
-import uuid
+
 
 class NationalIDController(http.Controller):
 
     @http.route('/national-id/apply', type='http', auth='public', website=True)
     def application_form(self, **kw):
-        # Serve the form with empty default values
         return request.render(
             "national_id_application.national_id_form_template",
             {"errors": {}, "values": {}}
@@ -15,6 +14,8 @@ class NationalIDController(http.Controller):
 
     @http.route('/national-id/submit', type='http', auth='public', methods=['POST'], website=True, csrf=False)
     def application_submit(self, **post):
+        """Process National ID application form submission"""
+        # Extract form data
         surname = (post.get('surname') or '').strip()
         first_name = (post.get('first_name') or '').strip()
         dob = post.get('dob') or ''
@@ -28,14 +29,18 @@ class NationalIDController(http.Controller):
         nok_first_name = (post.get('next_of_kin_first_name') or '').strip()
         nok_phone = (post.get('next_of_kin_phone') or '').strip()
 
+        # Process file uploads
         photo_file = post.get('photo')
         lc_letter_file = post.get('lc_letter')
         photo = base64.b64encode(photo_file.read()) if photo_file else False
-        lc_letter = base64.b64encode(lc_letter_file.read()) if lc_letter_file else False
+        lc_letter = base64.b64encode(
+            lc_letter_file.read()) if lc_letter_file else False
 
+        # Combine name fields
         full_name = f"{surname} {first_name}".strip()
         next_of_kin_combined = f"{nok_surname} {nok_first_name}".strip()
 
+        # Create application record
         record = request.env['national.id.application'].sudo().create({
             'name': full_name,
             'dob': dob,
@@ -51,8 +56,8 @@ class NationalIDController(http.Controller):
             'lc_letter': lc_letter,
         })
 
+        # Show success page with tracking number
         return request.render(
             "national_id_application.application_success",
             {'tracking_number': record.tracking_number}
         )
-

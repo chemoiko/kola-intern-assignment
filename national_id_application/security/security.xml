@@ -1,42 +1,33 @@
+<!--
+National ID Application Security Configuration
+
+Defines user groups and access rules for the 3-stage approval workflow:
+- Verification User: Can verify applications (draft → verified)
+- Senior User: Can approve verified applications (verified → senior_approved)  
+- Final User: Can give final approval (senior_approved → final_approved)
+
+Groups are hierarchical - higher levels inherit lower level permissions.
+-->
+
 <odoo>
+    <!-- User Groups for 3-Stage Approval Workflow -->
+
+    <!-- Level 1: Verification Users -->
     <record id="group_verification_user" model="res.groups">
         <field name="name">Verification User</field>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
     </record>
 
+    <!-- Level 2: Senior Users (inherits verification permissions) -->
     <record id="group_senior_user" model="res.groups">
         <field name="name">Senior User</field>
-        <field name="implied_ids" eval="[(4, ref('national_id_application.group_verification_user'))]"/>
+        <field name="implied_ids"
+            eval="[(4, ref('national_id_application.group_verification_user'))]" />
     </record>
 
+    <!-- Level 3: Final Users (inherits senior + verification permissions) -->
     <record id="group_final_user" model="res.groups">
         <field name="name">Final approver</field>
-        <field name="implied_ids" eval="[(4, ref('national_id_application.group_senior_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('national_id_application.group_senior_user'))]" />
     </record>
-
-    <!-- Simple approach: Use view-level readonly instead of complex record rules -->
-    <!-- All authenticated users can read and write, but we'll control via views and model methods -->
-    <record id="rule_all_internal_users" model="ir.rule">
-        <field name="name">All Internal Users Access</field>
-        <field name="model_id" ref="model_national_id_application"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="True"/>
-        <field name="perm_create" eval="True"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
-
-    <!-- Public users can only access their own applications -->
-    <record id="rule_public_user_access" model="ir.rule">
-        <field name="name">Public User Access</field>
-        <field name="model_id" ref="model_national_id_application"/>
-        <field name="domain_force">[('create_uid', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="True"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
-
 </odoo>

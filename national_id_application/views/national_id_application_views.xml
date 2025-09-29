@@ -1,64 +1,70 @@
+<!--
+National ID Application Views
+
+Defines the user interface for the National ID application management system.
+Includes form view, list view, and search view with role-based button visibility.
+-->
+
 <odoo>
+    <!-- Form View: Detailed application form with 3-stage approval workflow -->
     <record id="view_national_id_form" model="ir.ui.view">
         <field name="name">national.id.application.form</field>
         <field name="model">national.id.application</field>
         <field name="arch" type="xml">
             <form string="National ID Application">
                 <header>
+                    <!-- Workflow Action Buttons -->
+
+                    <!-- Stage 1: Verification (draft → verified) -->
                     <button name="action_verify" string="Verify" type="object"
                         class="oe_highlight"
                         groups="national_id_application.group_verification_user"
                         invisible="state != 'draft'" />
+
+                    <!-- Stage 2: Senior Approval (verified → senior_approved) -->
                     <button name="action_senior_approve" string="Senior Approve" type="object"
                         class="oe_highlight"
                         groups="national_id_application.group_senior_user"
                         invisible="state != 'verified'" />
+
+                    <!-- Stage 3: Final Approval (senior_approved → final_approved) -->
                     <button name="action_final_approve" string="Final Approve" type="object"
                         class="oe_highlight"
                         groups="national_id_application.group_final_user"
                         invisible="state != 'senior_approved'" />
 
-
-                    <!-- Reject at Verification -->
+                    <!-- Reject Buttons (available at different stages) -->
                     <button name="action_reject" string="Reject" type="object"
                         class="btn-secondary"
                         groups="national_id_application.group_verification_user"
                         invisible="state != 'verified'" />
-
-                    <!-- Reject at Senior -->
                     <button name="action_reject" string="Reject" type="object"
                         class="btn-secondary"
                         groups="national_id_application.group_senior_user"
                         invisible="state != 'senior_approved'" />
-
-                    <!-- Reject at Final -->
                     <button name="action_reject" string="Reject" type="object"
                         class="btn-secondary"
                         groups="national_id_application.group_final_user"
                         invisible="state != 'final_approved'" />
 
-
+                    <!-- Status Bar showing workflow progress -->
                     <field name="state"
                         widget="statusbar"
                         statusbar_visible="draft,verified,senior_approved,final_approved,rejected" />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <!-- Stage indicators via statusbar field below -->
-                    </div>
+                    <!-- Applicant photo displayed as avatar -->
                     <field name="photo" widget="image" class="oe_avatar" nolabel="1"
                         options="{'zoom': true}" />
 
+                    <!-- Application title and tracking number -->
                     <div class="oe_title">
                         <span class="o_form_label">National ID Application </span>
-
                     </div>
                     <h1>
-                        <field
-                            name="tracking_number"
-                            class="oe_inline"
-                        />
+                        <field name="tracking_number" class="oe_inline" />
                     </h1>
+                    <!-- Basic applicant information (readonly after creation) -->
                     <group>
                         <group>
                             <field name="name" readonly="id" />
@@ -75,6 +81,8 @@
                             <field name="next_of_kin_phone" readonly="id" />
                         </group>
                     </group>
+
+                    <!-- pages -->
                     <notebook>
                         <page string="Verification">
 
@@ -121,8 +129,6 @@
                                     </div>
                                 </div>
                             </group>
-
-
                         </page>
 
                         <page string="Notes">
@@ -136,9 +142,7 @@
                                 <field name="final_approver_notes" colspan="2"
                                     invisible="state not in ['senior_approved', 'final_approved']"
                                     readonly="state in ['final_approved', 'rejected']" />
-
                             </group>
-
                         </page>
 
 
@@ -150,7 +154,7 @@
         </field>
     </record>
 
-
+    <!-- List View: Applications overview with color-coded status -->
     <record id="view_national_id_tree" model="ir.ui.view">
         <field name="name">national.id.application.tree</field>
         <field name="model">national.id.application</field>
@@ -165,19 +169,18 @@
                 <field name="application_date" />
                 <field name="name" />
                 <field name="email" />
-                <field
-                    name="state"
-                    widget="badge"
+                <!-- Status badge with color coding -->
+                <field name="state" widget="badge"
                     decoration-muted="state == 'draft'"
                     decoration-info="state == 'verified'"
                     decoration-warning="state == 'senior_approved'"
                     decoration-success="state == 'final_approved'"
-                    decoration-danger="state == 'rejected'"
-                />
+                    decoration-danger="state == 'rejected'" />
             </list>
         </field>
     </record>
 
+    <!-- Action: Main menu item for National ID Applications -->
     <record id="action_national_id_application" model="ir.actions.act_window">
         <field name="name">National ID Applications</field>
         <field name="res_model">national.id.application</field>

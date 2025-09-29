@@ -1,4 +1,13 @@
+<!--
+National ID Application Web Form Template
+
+Public-facing web form for National ID applications.
+Accessible at /national-id/apply without authentication.
+Submits to /national-id/submit controller endpoint.
+-->
+
 <odoo>
+    <!-- Public Web Form Template -->
     <template id="national_id_form_template" name="National ID Application Form">
         <t t-name="national_id_application.national_id_form_template">
             <html lang="en">
@@ -6,7 +15,6 @@
                     <meta charset="utf-8" />
                     <meta name="viewport" content="width=device-width, initial-scale=1" />
                     <title>National ID Application Form</title>
-
                     <t t-call-assets="web.assets_frontend" t-js="false" />
                 </head>
                 <body>
@@ -17,6 +25,7 @@
                                     <div class="card-body">
                                         <h4 class="mb-3 text-center">National ID Application</h4>
 
+                                        <!-- Error Display Section -->
                                         <t t-if="errors">
                                             <div class="alert alert-danger" role="alert">
                                                 <strong>There were some problems with your
