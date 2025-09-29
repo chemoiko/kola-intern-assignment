@@ -21,7 +21,7 @@ class NationalIDController(http.Controller):
         gender = post.get('gender') or ''
         marital_status = post.get('marital_status') or False
         nationality = post.get('nationality') or False
-        district = (post.get('district') or '').strip()
+        address = (post.get('address') or '').strip()
         phone = (post.get('phone') or '').strip()
         email = (post.get('email') or '').strip()
         nok_surname = (post.get('next_of_kin_surname') or '').strip()
@@ -42,7 +42,7 @@ class NationalIDController(http.Controller):
             'gender': gender,
             'marital_status': marital_status,
             'nationality': nationality,
-            'district': district,
+            'address': address,
             'phone': phone,
             'email': email,
             'next_of_kin': next_of_kin_combined,

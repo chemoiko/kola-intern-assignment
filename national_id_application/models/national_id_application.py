@@ -18,7 +18,7 @@ class NationalIDApplication(models.Model):
     dob = fields.Date(string="Date of Birth", required=True)
     gender = fields.Selection(
         [('male', 'Male'), ('female', 'Female')], string="Gender", required=True)
-    district = fields.Char(string="District of Origin", required=True)
+    address = fields.Char(string="Address", required=True)
     marital_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),

@@ -64,7 +64,7 @@
                             <field name="name" readonly="id" />
                             <field name="dob" readonly="id" />
                             <field name="gender" readonly="id" />
-                            <field name="district" readonly="id" />
+                            <field name="address" readonly="id" />
                             <field name="phone" readonly="id" />
                             <field name="application_date" readonly="1" />
                             <field name="email" readonly="id" />
