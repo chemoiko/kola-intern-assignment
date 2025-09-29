@@ -88,16 +88,18 @@
                                     type="object"
                                     class="btn-secondary"
                                 />
-                                <field name="photo_quality" string="Support Photo Quality" />
-                                <field name="lc_present" />
-                                <field name="lc_valid" />
-                                <field name="photo_quality" string="LC Letter Quality" />
+                            </group>
+                            <group string="Document Checks">
+                                <field name="photo_quality" readonly="fields_readonly" />
+                                <field name="lc_present" readonly="fields_readonly" />
+                                <field name="lc_valid" readonly="fields_readonly" />
                             </group>
 
                             <group string="Identity Checks">
-                                <field name="name_match" />
-                                <field name="address_match" />
+                                <field name="name_match" readonly="fields_readonly" />
+                                <field name="address_match" readonly="fields_readonly" />
                             </group>
+
                         </page>
                         <page string="Documents">
                             <group colspan="4">
@@ -127,13 +129,13 @@
                             <group>
                                 <field name="verification_notes" colspan="2" string="Verifier Notes"
                                     invisible="state not in ['draft', 'verified', 'senior_approved', 'final_approved']"
-                                    required="state == 'draft'" />
+                                    readonly="state in ['verified', 'senior_approved', 'final_approved', 'rejected']" />
                                 <field name="senior_approver_notes" colspan="2"
                                     invisible="state not in ['verified', 'senior_approved', 'final_approved']"
-                                    required="state == 'verified'" />
+                                    readonly="state in ['senior_approved', 'final_approved', 'rejected']" />
                                 <field name="final_approver_notes" colspan="2"
                                     invisible="state not in ['senior_approved', 'final_approved']"
-                                    required="state == 'senior_approved'" />
+                                    readonly="state in ['final_approved', 'rejected']" />
 
                             </group>
 
