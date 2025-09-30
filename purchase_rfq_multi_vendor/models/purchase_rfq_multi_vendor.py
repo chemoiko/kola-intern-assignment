@@ -1,9 +1,22 @@
 
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+
+    # Override partner_id to make it optional for RFQs
+    partner_id = fields.Many2one(
+        'res.partner', 
+        string='Vendor', 
+        required=False,  # Remove the required constraint
+        index=True,
+        change_default=True, 
+        tracking=True,
+        check_company=True,
+        help="You can find a vendor by its Name, TIN, Email or Internal Reference."
+    )
 
     rfq_vendor_ids = fields.One2many(
         'purchase.rfq.vendor', 'rfq_id', string='Vendors')
@@ -14,7 +27,18 @@ class PurchaseOrder(models.Model):
     )
 
     def button_confirm(self):
+        # Ensure we have a primary vendor before confirming
+        for order in self:
+            if not order.partner_id:
+                # If no primary vendor, check if we have any vendors in the RFQ
+                if not order.rfq_vendor_ids:
+                    raise ValidationError("Cannot confirm RFQ without any vendors. Please add vendors first.")
+                # Auto-select the first vendor as primary if none selected
+                order.partner_id = order.rfq_vendor_ids[0].partner_id
+        
         res = super().button_confirm()
+        
+        # Clean up non-winning vendors after confirmation
         for order in self:
             winner = order.partner_id
             if winner and order.rfq_vendor_ids:
@@ -23,6 +47,15 @@ class PurchaseOrder(models.Model):
                 if others:
                     others.unlink()
         return res
+
+    @api.constrains('partner_id', 'rfq_vendor_ids', 'state')
+    def _check_vendor_requirements(self):
+        """Ensure RFQ has at least one vendor when being sent"""
+        for order in self:
+            if order.state == 'sent' and not order.partner_id and not order.rfq_vendor_ids:
+                raise ValidationError(
+                    "RFQ must have either a primary vendor or vendors in the multi-vendor list before sending."
+                )
 
 
 class PurchaseRfqVendor(models.Model):
@@ -81,6 +114,7 @@ class PurchaseRfqBid(models.Model):
                     'rfq_id': bid.rfq_id.id,
                     'partner_id': bid.vendor_id.id,
                 })
+            # Set the winning vendor as the primary vendor
             bid.rfq_id.partner_id = bid.vendor_id.id
 
     def action_set_won(self):
