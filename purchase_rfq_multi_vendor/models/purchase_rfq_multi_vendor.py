@@ -58,7 +58,7 @@ class PurchaseRfqBid(models.Model):
                                   required=True, default=lambda self: self.env.company.currency_id)
     note = fields.Text()
     state = fields.Selection([('draft', 'Draft'), ('submitted', 'Submitted'),
-                             ('won', 'Won'), ('lost', 'Lost')], default='draft')
+                             ('won', 'Won'), ('lost', 'Lost')], default='draft', string='Status')
 
     _sql_constraints = [
         ('uniq_rfq_vendor', 'unique(rfq_id, vendor_id)',

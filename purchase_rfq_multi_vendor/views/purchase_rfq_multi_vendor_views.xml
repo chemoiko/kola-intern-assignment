@@ -40,7 +40,7 @@
         <field name="priority" eval="95" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='vendors_page']" position="after">
-                <page name="bids_page" string="Bids">
+                <page name="bids_page" string="Bids" invisible="state not in ('sent', 'purchase')">
                     <group>
                         <field name="bid_ids" readonly="state != 'sent'">
                             <list editable="bottom">
